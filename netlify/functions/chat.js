@@ -1,12 +1,3 @@
-// Example Netlify serverless function for connecting a real AI provider.
-//
-// The frontend calls POST /api/chat (redirected to this function — see
-// netlify.toml). The API key lives only in this server-side environment
-// variable and is never sent to or exposed in the browser.
-//
-// Set ANTHROPIC_API_KEY in your Netlify site's environment variables
-// (Site settings -> Environment variables) before deploying.
-
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -22,28 +13,29 @@ export async function handler(event) {
       };
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'ANTHROPIC_API_KEY is not configured on the server.' }),
+        body: JSON.stringify({ error: 'GEMINI_API_KEY is not configured on the server.' }),
       };
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1024,
-        messages,
-      }),
-    });
+    // Gemini uses "model" instead of "assistant" for AI turns
+    const contents = messages.map((m) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }));
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents }),
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -51,7 +43,9 @@ export async function handler(event) {
     }
 
     const data = await response.json();
-    const reply = data.content?.[0]?.text || "Sorry, I couldn't generate a response.";
+    const reply =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Sorry, I couldn't generate a response.";
 
     return {
       statusCode: 200,
@@ -61,4 +55,4 @@ export async function handler(event) {
   } catch (error) {
     return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
   }
-}
+      }
