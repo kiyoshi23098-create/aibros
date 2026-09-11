@@ -4,8 +4,7 @@ export async function handler(event) {
   }
 
   try {
-    const { messages } = JSON.parse(event.body || '{}');
-    console.log('Received messages:', JSON.stringify(messages));
+    const { messages, userName } = JSON.parse(event.body || '{}');
 
     if (!Array.isArray(messages)) {
       return {
@@ -15,10 +14,8 @@ export async function handler(event) {
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
-    console.log('API key present:', Boolean(apiKey));
 
     if (!apiKey) {
-      console.error('GEMINI_API_KEY is missing');
       return {
         statusCode: 500,
         body: JSON.stringify({ error: 'GEMINI_API_KEY is not configured on the server.' }),
@@ -30,16 +27,29 @@ export async function handler(event) {
       parts: [{ text: m.content }],
     }));
 
+    const safeName = typeof userName === 'string' ? userName.trim().slice(0, 60) : '';
+
+    const systemInstruction = safeName
+      ? {
+          parts: [
+            {
+              text: `The user's name is ${safeName}. Address them by name naturally where it fits, without overdoing it or repeating it in every single sentence.`,
+            },
+          ],
+        }
+      : undefined;
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents }),
+        body: JSON.stringify({
+          ...(systemInstruction ? { systemInstruction } : {}),
+          contents,
+        }),
       }
     );
-
-    console.log('Gemini response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -48,8 +58,6 @@ export async function handler(event) {
     }
 
     const data = await response.json();
-    console.log('Gemini success response:', JSON.stringify(data));
-
     const reply =
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Sorry, I couldn't generate a response.";
