@@ -105,7 +105,7 @@ export default function ChatLayout() {
     }));
 
     try {
-      const reply = await generateAIResponse(historyForAI);
+      const reply = await generateAIResponse(historyForAI ,userName);
       const aiMessage = {
         id: generateId(),
         role: 'assistant',
