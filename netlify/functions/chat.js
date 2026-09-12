@@ -22,10 +22,26 @@ export async function handler(event) {
       };
     }
 
-    const contents = messages.map((m) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    }));
+    const contents = messages.map((m) => {
+      const parts = [];
+
+      if (m.image && m.image.data && m.image.mimeType) {
+        parts.push({ inlineData: { mimeType: m.image.mimeType, data: m.image.data } });
+      }
+
+      if (m.content) {
+        parts.push({ text: m.content });
+      }
+
+      if (parts.length === 0) {
+        parts.push({ text: '' });
+      }
+
+      return {
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts,
+      };
+    });
 
     const safeName = typeof userName === 'string' ? userName.trim().slice(0, 60) : '';
 
