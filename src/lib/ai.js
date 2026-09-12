@@ -26,13 +26,6 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/**
- * Generates an AI reply for the given conversation history.
- *
- * `messages` is an array of { role: 'user' | 'assistant', content: string }.
- * `userName` is the person's stored display name, sent along so the backend
- * (and the AI model) can address them personally.
- */
 export async function generateAIResponse(messages, userName) {
   const endpoint = import.meta.env.VITE_AI_API_ENDPOINT || '/api/chat';
 
@@ -57,6 +50,11 @@ export async function generateAIResponse(messages, userName) {
   } catch {
     const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user');
     await wait(500 + Math.random() * 500);
+
+    if (lastUserMessage?.image) {
+      return "I can see you attached an image, but I can't view images in mock mode. Connect a real AI backend to analyze it.";
+    }
+
     return pickMockResponse(lastUserMessage ? lastUserMessage.content : '', userName);
   }
-}
+  }
