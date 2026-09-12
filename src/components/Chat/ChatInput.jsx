@@ -111,7 +111,7 @@ export default function ChatInput({ onSend, disabled }) {
   const canSend = Boolean((value.trim() || attachedImage) && !disabled);
 
   return (
-    <div className="border-t border-neutral-200 bg-white px-4 py-4 sm:px-8">
+    <div className="border-t border-neutral-200 bg-white px-4 py-4 dark:border-neutral-800 dark:bg-neutral-900 sm:px-8">
       <div className="mx-auto max-w-3xl">
         {attachedImage && (
           <div className="mb-2 flex items-center gap-2">
@@ -125,7 +125,7 @@ export default function ChatInput({ onSend, disabled }) {
                 type="button"
                 onClick={removeAttachedImage}
                 aria-label="Remove attached image"
-                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-900 text-xs text-white"
+                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-900 text-xs text-white dark:bg-neutral-100 dark:text-neutral-900"
               >
                 ✕
               </button>
@@ -133,9 +133,9 @@ export default function ChatInput({ onSend, disabled }) {
           </div>
         )}
 
-        {imageError && <p className="mb-2 text-xs text-red-500">{imageError}</p>}
+        {imageError && <p className="mb-2 text-xs text-red-500 dark:text-red-400">{imageError}</p>}
 
-        <div className="flex items-end gap-2 rounded-3xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 transition-colors focus-within:border-neutral-400">
+        <div className="flex items-end gap-2 rounded-3xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 transition-colors focus-within:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-800 dark:focus-within:border-neutral-500">
           <input
             ref={galleryInputRef}
             type="file"
@@ -163,7 +163,7 @@ export default function ChatInput({ onSend, disabled }) {
               aria-label="Attach an image"
               aria-haspopup="menu"
               aria-expanded={showAttachMenu}
-              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus-visible:outline-neutral-100"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
@@ -179,13 +179,13 @@ export default function ChatInput({ onSend, disabled }) {
             {showAttachMenu && (
               <div
                 role="menu"
-                className="absolute bottom-12 left-0 z-10 w-40 overflow-hidden rounded-xl border border-neutral-200 bg-white py-1 shadow-lg"
+                className="absolute bottom-12 left-0 z-10 w-40 overflow-hidden rounded-xl border border-neutral-200 bg-white py-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-800"
               >
                 <button
                   type="button"
                   role="menuitem"
                   onClick={openGallery}
-                  className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-neutral-900"
+                  className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus-visible:outline-neutral-100"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8" />
@@ -204,7 +204,7 @@ export default function ChatInput({ onSend, disabled }) {
                   type="button"
                   role="menuitem"
                   onClick={openCamera}
-                  className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-neutral-900"
+                  className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:focus-visible:outline-neutral-100"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path
@@ -232,14 +232,14 @@ export default function ChatInput({ onSend, disabled }) {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             placeholder="Message AiBros"
-            className="max-h-40 flex-1 resize-none bg-transparent py-1.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
+            className="max-h-40 flex-1 resize-none bg-transparent py-1.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-500"
           />
           <button
             type="button"
             onClick={handleSend}
             disabled={!canSend}
             aria-label="Send message"
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white transition-opacity disabled:opacity-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white transition-opacity disabled:opacity-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:focus-visible:outline-neutral-100"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
@@ -254,9 +254,9 @@ export default function ChatInput({ onSend, disabled }) {
           </button>
         </div>
       </div>
-      <p className="mx-auto mt-2 max-w-3xl text-center text-xs text-neutral-400">
+      <p className="mx-auto mt-2 max-w-3xl text-center text-xs text-neutral-400 dark:text-neutral-600">
         AiBros can make mistakes. Consider checking important information.
       </p>
     </div>
   );
-    }
+              }
