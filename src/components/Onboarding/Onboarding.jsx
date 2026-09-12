@@ -12,7 +12,6 @@ export default function Onboarding({ onComplete }) {
   useEffect(() => {
     if (step !== 'hi') return undefined;
 
-    // Fade in, hold briefly, fade out — roughly 1.5s total.
     const fadeMs = reducedMotion ? 0 : 500;
     const holdMs = reducedMotion ? 300 : 500;
 
@@ -36,10 +35,10 @@ export default function Onboarding({ onComplete }) {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-neutral-50 px-6">
+    <div className="fixed inset-0 flex items-center justify-center bg-neutral-50 px-6 dark:bg-neutral-950">
       {step === 'hi' && (
         <h1
-          className={`text-4xl font-medium text-neutral-900 transition-opacity duration-500 ease-out motion-reduce:transition-none ${
+          className={`text-4xl font-medium text-neutral-900 transition-opacity duration-500 ease-out motion-reduce:transition-none dark:text-neutral-50 ${
             hiVisible ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -49,7 +48,7 @@ export default function Onboarding({ onComplete }) {
 
       {step === 'name' && (
         <div className="flex w-full max-w-sm flex-col items-center gap-8 animate-fadeIn motion-reduce:animate-none">
-          <h1 className="text-center text-2xl font-medium text-neutral-900">
+          <h1 className="text-center text-2xl font-medium text-neutral-900 dark:text-neutral-50">
             How may I address you?
           </h1>
           <NameInput onSubmit={handleNameSubmit} />
@@ -58,13 +57,13 @@ export default function Onboarding({ onComplete }) {
 
       {step === 'welcome' && (
         <div className="flex w-full max-w-sm flex-col items-center gap-8 animate-fadeIn motion-reduce:animate-none">
-          <h1 className="text-center text-2xl font-medium text-neutral-900">
+          <h1 className="text-center text-2xl font-medium text-neutral-900 dark:text-neutral-50">
             Let&rsquo;s start, {name}
           </h1>
           <button
             type="button"
             onClick={onComplete}
-            className="animate-fadeIn rounded-full bg-neutral-900 px-8 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 motion-reduce:animate-none"
+            className="animate-fadeIn rounded-full bg-neutral-900 px-8 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 motion-reduce:animate-none dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
             style={{ animationDelay: reducedMotion ? '0ms' : '200ms' }}
           >
             Start
@@ -73,4 +72,4 @@ export default function Onboarding({ onComplete }) {
       )}
     </div>
   );
-}
+      }
