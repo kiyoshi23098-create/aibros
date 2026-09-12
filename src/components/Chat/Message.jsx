@@ -1,6 +1,6 @@
 import { formatTime } from '../../lib/utils';
 
-export default function Message({ role, content, timestamp }) {
+export default function Message({ role, content, image, timestamp }) {
   const isUser = role === 'user';
 
   return (
@@ -10,13 +10,22 @@ export default function Message({ role, content, timestamp }) {
           isUser ? 'items-end' : 'items-start'
         }`}
       >
-        <div
-          className={`whitespace-pre-wrap break-words rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${
-            isUser ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-800'
-          }`}
-        >
-          {content}
-        </div>
+        {image && (
+          <img
+            src={image.previewUrl}
+            alt="Attached"
+            className="max-h-64 rounded-2xl object-cover"
+          />
+        )}
+        {content && (
+          <div
+            className={`whitespace-pre-wrap break-words rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${
+              isUser ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-800'
+            }`}
+          >
+            {content}
+          </div>
+        )}
         {timestamp && <span className="px-1 text-xs text-neutral-400">{formatTime(timestamp)}</span>}
       </div>
     </div>
