@@ -20,7 +20,7 @@ export default function Sidebar({
       )}
 
       <aside
-        className={`fixed z-40 flex h-full w-64 flex-shrink-0 flex-col border-r border-neutral-200 bg-neutral-50 transition-transform duration-300 ease-out md:static md:z-auto md:translate-x-0 ${
+        className={`fixed z-40 flex h-full w-64 flex-shrink-0 flex-col border-r border-neutral-200 bg-neutral-50 transition-transform duration-300 ease-out dark:border-neutral-800 dark:bg-neutral-950 md:static md:z-auto md:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -32,7 +32,7 @@ export default function Sidebar({
           <button
             type="button"
             onClick={onNew}
-            className="flex w-full items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+            className="flex w-full items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus-visible:outline-neutral-100"
           >
             <span aria-hidden="true">+</span>
             New chat
@@ -46,10 +46,10 @@ export default function Sidebar({
                 <button
                   type="button"
                   onClick={() => onSelect(conv.id)}
-                  className={`w-full truncate rounded-lg px-3 py-2 pr-8 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 ${
+                  className={`w-full truncate rounded-lg px-3 py-2 pr-8 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-neutral-100 ${
                     conv.id === activeId
-                      ? 'bg-neutral-200/70 text-neutral-900'
-                      : 'text-neutral-600 hover:bg-neutral-100'
+                      ? 'bg-neutral-200/70 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50'
+                      : 'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800'
                   }`}
                 >
                   {conv.title || 'New conversation'}
@@ -61,7 +61,7 @@ export default function Sidebar({
                     onDelete(conv.id);
                   }}
                   aria-label={`Delete conversation: ${conv.title || 'New conversation'}`}
-                  className="absolute right-1.5 top-1/2 hidden -translate-y-1/2 rounded-md px-1.5 py-1 text-xs text-neutral-400 hover:bg-neutral-200 hover:text-neutral-700 group-hover:block focus-visible:block"
+                  className="absolute right-1.5 top-1/2 hidden -translate-y-1/2 rounded-md px-1.5 py-1 text-xs text-neutral-400 hover:bg-neutral-200 hover:text-neutral-700 group-hover:block focus-visible:block dark:text-neutral-500 dark:hover:bg-neutral-700 dark:hover:text-neutral-200"
                 >
                   ✕
                 </button>
@@ -70,7 +70,7 @@ export default function Sidebar({
           </ul>
 
           {conversations.length === 0 && (
-            <p className="px-3 py-2 text-sm text-neutral-400">No conversations yet</p>
+            <p className="px-3 py-2 text-sm text-neutral-400 dark:text-neutral-600">No conversations yet</p>
           )}
         </nav>
       </aside>
