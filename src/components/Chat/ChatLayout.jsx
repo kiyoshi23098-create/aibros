@@ -60,7 +60,7 @@ export default function ChatLayout() {
     if (activeId === id) setActiveId(null);
   }
 
-  async function handleSend(text) {
+    async function handleSend(text, image) {
     let convId = activeId;
     let workingConversations = conversations;
 
@@ -81,6 +81,7 @@ export default function ChatLayout() {
       id: generateId(),
       role: 'user',
       content: text,
+      image: image ? { previewUrl: image.previewUrl, mimeType: image.mimeType, data: image.data } : undefined,
       timestamp: Date.now(),
     };
 
@@ -89,7 +90,7 @@ export default function ChatLayout() {
       const isFirstMessage = c.messages.length === 0;
       return {
         ...c,
-        title: isFirstMessage ? titleFromMessage(text) : c.title,
+        title: isFirstMessage ? titleFromMessage(text || 'Image') : c.title,
         messages: [...c.messages, userMessage],
         updatedAt: Date.now(),
       };
@@ -102,10 +103,11 @@ export default function ChatLayout() {
     const historyForAI = targetConversation.messages.map((m) => ({
       role: m.role,
       content: m.content,
+      image: m.image ? { mimeType: m.image.mimeType, data: m.image.data } : undefined,
     }));
 
     try {
-      const reply = await generateAIResponse(historyForAI ,userName);
+      const reply = await generateAIResponse(historyForAI, userName);
       const aiMessage = {
         id: generateId(),
         role: 'assistant',
@@ -122,8 +124,7 @@ export default function ChatLayout() {
     } finally {
       setIsTyping(false);
     }
-  }
-
+      }
   function handleNameChange(newName) {
     setUserNameState(newName);
   }
