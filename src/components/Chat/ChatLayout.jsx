@@ -60,7 +60,7 @@ export default function ChatLayout() {
     if (activeId === id) setActiveId(null);
   }
 
-    async function handleSend(text, image) {
+  async function handleSend(text, image) {
     let convId = activeId;
     let workingConversations = conversations;
 
@@ -124,13 +124,55 @@ export default function ChatLayout() {
     } finally {
       setIsTyping(false);
     }
-      }
+  }
+
+  async function handleRegenerate() {
+    if (!activeConversation || isTyping) return;
+
+    const messages = activeConversation.messages;
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage || lastMessage.role !== 'assistant') return;
+
+    const convId = activeConversation.id;
+    const messagesWithoutLastReply = messages.slice(0, -1);
+
+    setConversations((prev) =>
+      prev.map((c) => (c.id === convId ? { ...c, messages: messagesWithoutLastReply } : c))
+    );
+    setIsTyping(true);
+
+    const historyForAI = messagesWithoutLastReply.map((m) => ({
+      role: m.role,
+      content: m.content,
+      image: m.image ? { mimeType: m.image.mimeType, data: m.image.data } : undefined,
+    }));
+
+    try {
+      const reply = await generateAIResponse(historyForAI, userName);
+      const aiMessage = {
+        id: generateId(),
+        role: 'assistant',
+        content: reply,
+        timestamp: Date.now(),
+      };
+      setConversations((prev) =>
+        prev.map((c) =>
+          c.id === convId
+            ? { ...c, messages: [...c.messages, aiMessage], updatedAt: Date.now() }
+            : c
+        )
+      );
+    } finally {
+      setIsTyping(false);
+    }
+  }
+
   function handleNameChange(newName) {
     setUserNameState(newName);
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white">
+    <div className="flex h-screen w-full overflow-hidden bg-white dark:bg-neutral-900">
       <Sidebar
         conversations={conversations}
         activeId={activeId}
@@ -142,13 +184,13 @@ export default function ChatLayout() {
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-neutral-200 px-4 py-3 md:px-6">
+        <header className="flex items-center justify-between border-b border-neutral-200 px-4 py-3 dark:border-neutral-800 md:px-6">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open conversation history"
-              className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 md:hidden"
+              className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus-visible:outline-neutral-100 md:hidden"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -163,7 +205,7 @@ export default function ChatLayout() {
             type="button"
             onClick={() => setSettingsOpen(true)}
             aria-label="Open settings"
-            className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+            className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:focus-visible:outline-neutral-100"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="2" />
@@ -176,7 +218,12 @@ export default function ChatLayout() {
           </button>
         </header>
 
-        <ChatWindow messages={activeConversation?.messages || []} isTyping={isTyping} />
+        <ChatWindow
+          messages={activeConversation?.messages || []}
+          isTyping={isTyping}
+          onRegenerate={handleRegenerate}
+          onSuggestionClick={(text) => handleSend(text, null)}
+        />
         <ChatInput onSend={handleSend} disabled={isTyping} />
       </div>
 
@@ -189,4 +236,4 @@ export default function ChatLayout() {
       )}
     </div>
   );
-}
+               }
