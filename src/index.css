@@ -9,11 +9,10 @@ body,
 }
 
 body {
-  @apply bg-white text-neutral-900 antialiased;
+  @apply bg-white text-neutral-900 antialiased dark:bg-neutral-900 dark:text-neutral-100;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Slim, unobtrusive scrollbars */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgb(212 212 212) transparent;
