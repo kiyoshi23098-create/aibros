@@ -25,6 +25,7 @@ export default function ChatWindow({ messages, isTyping }) {
             key={message.id}
             role={message.role}
             content={message.content}
+            image={message.image}
             timestamp={message.timestamp}
           />
         ))}
