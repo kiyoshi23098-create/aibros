@@ -21,9 +21,9 @@ export default function WelcomeScreen({ name, onComplete }) {
   }, [reducedMotion, onComplete]);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-neutral-50 px-6">
+    <div className="fixed inset-0 flex items-center justify-center bg-neutral-50 px-6 dark:bg-neutral-950">
       <h1
-        className={`text-3xl font-medium text-neutral-900 transition-opacity duration-500 ease-out motion-reduce:transition-none ${
+        className={`text-3xl font-medium text-neutral-900 transition-opacity duration-500 ease-out motion-reduce:transition-none dark:text-neutral-50 ${
           visible ? 'opacity-100' : 'opacity-0'
         }`}
       >
